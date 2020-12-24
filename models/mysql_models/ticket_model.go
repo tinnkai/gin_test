@@ -7,37 +7,37 @@ import (
 )
 
 type Ticket struct {
-	Id           int       `gorm:"column(id);auto"`
-	Name         string    `gorm:"column(name);size(200)"`
-	GetStartTime time.Time `gorm:"column(get_start_time);type(datetime)"`
-	GetEndTime   time.Time `gorm:"column(get_end_time);type(datetime);null"`
-	StartTime    time.Time `gorm:"column(start_time);type(datetime);null"`
-	EndTime      time.Time `gorm:"column(end_time);type(datetime);null"`
-	Amount       float64   `gorm:"column(amount);null;digits(5);decimals(2)" description:"优惠券面额"`
-	MinAmount    float64   `gorm:"column(min_amount);null;digits(10);decimals(2)" description:"最低使用金额"`
-	Limit        int       `gorm:"column(limit);null"`
-	Scope        string    `gorm:"column(scope);size(20);null" description:"ALL | GOODS"`
-	Describe     string    `gorm:"column(describe);null" description:"描述"`
-	Status       string    `gorm:"column(status);size(20);null" description:"ENABELD | DISABLED"`
-	IsDel        string    `gorm:"column(is_del);size(1);null" description:"Y|N"`
-	UpdateTime   time.Time `gorm:"column(update_time);type(datetime);null"`
-	CreateTime   time.Time `gorm:"column(create_time);type(datetime);null"`
+	Id           int                  `gorm:"column(id);auto"`
+	Name         string               `gorm:"column(name);size(200)"`
+	GetStartTime time.Time            `gorm:"column(get_start_time);type(datetime)"`
+	GetEndTime   time.Time            `gorm:"column(get_end_time);type(datetime);null"`
+	StartTime    utils.CustomDatetime `gorm:"column(start_time);type(datetime);null"`
+	EndTime      utils.CustomDatetime `gorm:"column(end_time);type(datetime);null"`
+	Amount       float64              `gorm:"column(amount);null;digits(5);decimals(2)" description:"优惠券面额"`
+	MinAmount    float64              `gorm:"column(min_amount);null;digits(10);decimals(2)" description:"最低使用金额"`
+	Limit        int                  `gorm:"column(limit);null"`
+	Scope        string               `gorm:"column(scope);size(20);null" description:"ALL | GOODS"`
+	Describe     string               `gorm:"column(describe);null" description:"描述"`
+	Status       string               `gorm:"column(status);size(20);null" description:"ENABELD | DISABLED"`
+	IsDel        string               `gorm:"column(is_del);size(1);null" description:"Y|N"`
+	UpdateTime   time.Time            `gorm:"column(update_time);type(datetime);null"`
+	CreateTime   time.Time            `gorm:"column(create_time);type(datetime);null"`
 }
 
 // 优惠券
 type OrderTicket struct {
-	Id                     int            `json:"-"`
-	Name                   string         `json:"name"`
-	Amount                 float64        `json:"amount"`
-	MinAmount              float64        `json:"-"`
-	RecordId               int            `json:"record_id"`
-	IsSelect               string         `json:"is_select"`
-	Status                 string         `json:"status"`
-	Scope                  string         `json:"-"`
-	TicketGoodsIds         map[int]int    `json:"-"`
-	TicketGoodsCategoryIds map[int]int    `json:"-"`
-	StartTime              utils.Datetime `json:"start_time"`
-	EndTime                utils.Datetime `json:"end_time"`
+	Id                     int                  `json:"-"`
+	Name                   string               `json:"name"`
+	Amount                 float64              `json:"amount"`
+	MinAmount              float64              `json:"-"`
+	RecordId               int                  `json:"record_id"`
+	IsSelect               string               `json:"is_select"`
+	Status                 string               `json:"status"`
+	Scope                  string               `json:"-"`
+	TicketGoodsIds         map[int]int          `json:"-"`
+	TicketGoodsCategoryIds map[int]int          `json:"-"`
+	StartTime              utils.CustomDatetime `json:"start_time"`
+	EndTime                utils.CustomDatetime `json:"end_time"`
 }
 
 func (t *Ticket) TableName() string {

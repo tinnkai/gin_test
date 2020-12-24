@@ -16,10 +16,12 @@ func NowDate() string {
 	return time.Now().Format("2006-01-02")
 }
 
-type Datetime time.Time
+// 无时区时间类型
+type CustomDatetime time.Time
 
-func (t Datetime) MarshalJSON() ([]byte, error) {
-	var stamp = fmt.Sprintf("\"%s\"", time.Time(t).Format("2006-01-02 15:04:05"))
+// 返回json时去除时间中的时区
+func (c CustomDatetime) MarshalJSON() ([]byte, error) {
+	var stamp = fmt.Sprintf("\"%s\"", time.Time(c).Format("2006-01-02 15:04:05"))
 	return []byte(stamp), nil
 }
 
