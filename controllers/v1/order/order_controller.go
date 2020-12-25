@@ -21,7 +21,7 @@ type OrderController struct {
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/v1/order/checkout [get]
+// @Router /order/v1/checkout [post]
 func (this *OrderController) Checkout(c *gin.Context) {
 	appG := app.Gin{C: c}
 
@@ -77,7 +77,7 @@ func (this *OrderController) Checkout(c *gin.Context) {
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /api/v1/order/saveorder [get]
+// @Router /order/v1/saveorder [post]
 func (this *OrderController) SaveOrder(c *gin.Context) {
 	appG := app.Gin{C: c}
 	// 获取登录用户信息

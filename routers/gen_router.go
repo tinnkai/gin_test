@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	ginrpc.SetVersion(1608819185)
-	ginrpc.AddGenOne("HongdongController.Detail", "/hongdong/detail", []string{"post", "get"})
-	ginrpc.AddGenOne("HongdongController.List", "/hongdong/list", []string{"post", "get"})
+	ginrpc.SetVersion(1608914352)
+	ginrpc.AddGenOne("HongdongController.Detail", "/hongdong/detail", []string{"get"})
+	ginrpc.AddGenOne("HongdongController.List", "/hongdong/list", []string{"get"})
 }

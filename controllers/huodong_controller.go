@@ -20,7 +20,7 @@ type HongdongController struct {
 // @Produce  json
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /hongdong/list [post,get]
+// @Router /hongdong/list [get]
 func (this *HongdongController) List(c *gin.Context) {
 	appG := app.Gin{C: c}
 	var req ReqTest
@@ -38,7 +38,7 @@ func (this *HongdongController) List(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /hongdong/detail [post,get]
+// @Router /hongdong/detail [get]
 func (this *HongdongController) Detail(c *gin.Context) {
 	appG := app.Gin{C: c}
 	var req ReqTest

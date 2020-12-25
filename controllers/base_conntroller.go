@@ -10,7 +10,6 @@ import (
 )
 
 // @Summary Get Auth User Info
-// @Produce  user model
 func GetAuthUserInfo(c *gin.Context) (utils.AuthUser, error) {
 	// redis key
 	authUserKey := setting.RediskeySetting.AuthUserKey

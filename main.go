@@ -10,6 +10,7 @@ import (
 	"gin_test/routers"
 	"net/http"
 
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,6 +43,11 @@ func main() {
 
 	// 初始化 gin
 	router := gin.Default()
+
+	// pprof debug run
+	if setting.ServerSetting.RunMode == "debug" {
+		pprof.Register(router)
+	}
 
 	// 初始化路由
 	routers.InitRouter(router)
