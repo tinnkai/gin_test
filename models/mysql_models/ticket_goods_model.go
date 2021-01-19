@@ -14,7 +14,7 @@ type TicketGoods struct {
 }
 
 func (t *TicketGoods) TableName() string {
-	return "ticket_goods"
+	return "gin_ticket_goods"
 }
 
 // 查询优惠券商品

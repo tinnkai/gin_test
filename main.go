@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gin_test/models/mysql_activity_models"
 	"gin_test/models/mysql_models"
 	"gin_test/pkg/gredis"
 	"gin_test/pkg/logging"
@@ -10,8 +11,10 @@ import (
 	"gin_test/routers"
 	"net/http"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -19,6 +22,8 @@ func init() {
 	setting.Setup()
 	// mysql model
 	mysql_models.Setup()
+	// mysql activity model
+	mysql_activity_models.Setup()
 	// 日志
 	logging.Setup()
 	// redis
@@ -48,6 +53,14 @@ func main() {
 	if setting.ServerSetting.RunMode == "debug" {
 		pprof.Register(router)
 	}
+
+	viper.WatchConfig()
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		//fmt.Println("Config file changed:", e.Name)
+		// 设置配置
+		setting.SetConfig()
+		mysql_models.Setup()
+	})
 
 	// 初始化路由
 	routers.InitRouter(router)

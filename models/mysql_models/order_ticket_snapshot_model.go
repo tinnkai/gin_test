@@ -15,7 +15,7 @@ type OrderTicketSnapshot struct {
 }
 
 func (t *OrderTicketSnapshot) TableName() string {
-	return "gin_order_ticket_snapshot"
+	return "order_ticket_snapshot"
 }
 
 // 保存优惠券快照

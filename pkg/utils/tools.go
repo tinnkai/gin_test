@@ -2,18 +2,19 @@ package utils
 
 import (
 	"fmt"
+	"gin_test/pkg/setting"
 	"strconv"
 	"time"
 )
 
 // 获取当前时间
 func NowDateTime() string {
-	return time.Now().Format("2006-01-02 15:04:05")
+	return time.Now().Format(setting.AppSetting.DateTimeFormat)
 }
 
 // 获取当前日期
 func NowDate() string {
-	return time.Now().Format("2006-01-02")
+	return time.Now().Format(setting.AppSetting.DateFormat)
 }
 
 // 无时区时间类型
@@ -21,7 +22,7 @@ type CustomDatetime time.Time
 
 // 返回json时去除时间中的时区
 func (c CustomDatetime) MarshalJSON() ([]byte, error) {
-	var stamp = fmt.Sprintf("\"%s\"", time.Time(c).Format("2006-01-02 15:04:05"))
+	var stamp = fmt.Sprintf("\"%s\"", time.Time(c).Format(setting.AppSetting.DateTimeFormat))
 	return []byte(stamp), nil
 }
 

@@ -23,7 +23,7 @@ type Goods struct {
 }
 
 func (t *Goods) TableName() string {
-	return "goods"
+	return "gin_goods"
 }
 
 // 订单商品

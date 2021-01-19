@@ -25,9 +25,9 @@ func (t *Freight) TableName() string {
 
 // 根据城市id查询运费
 func GetFreightInfoByCityId(cityId int) (OrderFreight, error) {
-	var reightf Freight
+	var freight Freight
 	var orderFreight OrderFreight
-	err := db.Table(reightf.TableName()).Where("city_id = ?", cityId).Scan(&orderFreight).Error
+	err := db.Table(freight.TableName()).Where("city_id = ?", cityId).Scan(&orderFreight).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return orderFreight, err
 	}

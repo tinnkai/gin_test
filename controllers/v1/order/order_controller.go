@@ -33,11 +33,8 @@ func (this *OrderController) Checkout(c *gin.Context) {
 		return
 	}
 
-	userInfo := &mysql_models.User{}
-	userInfo.Id = authUserInfo.Id
-
 	// 获取用户信息
-	err = userInfo.GetUserInfoById("id,username,password,phone,`group`")
+	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.Id, "id,username,password,phone,`group`")
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
@@ -62,7 +59,7 @@ func (this *OrderController) Checkout(c *gin.Context) {
 	normalOrder.NormalPost = *pastData
 
 	// 确认订单
-	checkOutData, err := normalOrder.CheckOut(*userInfo)
+	checkOutData, err := normalOrder.CheckOut(userInfo)
 	if err != nil {
 		errInfo := errors.GetErrorContext(err)
 		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, errInfo.Field, false)
@@ -104,9 +101,7 @@ func (this *OrderController) SaveOrder(c *gin.Context) {
 	}
 
 	// 获取用户信息
-	userInfo := &mysql_models.User{}
-	userInfo.Id = authUserInfo.Id
-	err = userInfo.GetUserInfoById("id,username,password,phone,`group`")
+	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.Id, "id,username,password,phone,`group`")
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
@@ -116,7 +111,7 @@ func (this *OrderController) SaveOrder(c *gin.Context) {
 	normalOrder.NormalPost = *pastData
 
 	// 获取checkout信息
-	saveData, err := normalOrder.SaveOrder(*userInfo)
+	saveData, err := normalOrder.SaveOrder(userInfo)
 	if err != nil {
 		errInfo := errors.GetErrorContext(err)
 		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, errInfo.Field, false)

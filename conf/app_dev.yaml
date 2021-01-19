@@ -17,7 +17,8 @@ app:
   logSavePath: logs/
   logSaveName: log
   logFileExt: log
-  timeFormat: 20060102
+  dateFormat: 2006-01-02
+  dateTimeFormat: 2006-01-02 15:04:05
 
 # server
 server:
@@ -32,7 +33,19 @@ database:
   password: root
   host: 127.0.0.1:3306
   name: ginapi
+  maxIdleConns: 50
+  maxOpenConns: 1000
   tablePrefix: gin_
+
+databaseactivity:
+  type: mysql
+  user: root
+  password: root
+  host: 127.0.0.1:3306
+  name: activity
+  maxIdleConns: 50
+  maxOpenConns: 1000
+  tablePrefix: 
 
 mongo:
   user: root

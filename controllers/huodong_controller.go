@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"gin_test/models/mysql_activity_models"
 	"gin_test/pkg/app"
+	"gin_test/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -49,5 +51,23 @@ func (this *HongdongController) Detail(c *gin.Context) {
 		return
 	}
 	appG.Response(http.StatusOK, app.SUCCESS, "", req, false)
+	return
+}
+
+// @Summary 生日礼包活动信息
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /hongdong/birthdayPackageInfo [get]
+func (this *HongdongController) BirthdayPackageInfo(c *gin.Context) {
+	appG := app.Gin{C: c}
+	//data, err := mysql_activity_models.BirthdayPackageRepository.GetInfoByTime()
+	nowDateTime := utils.NowDateTime()
+	data, err := mysql_activity_models.BirthdayPackageRepository.GetOneByWhere("start_time <= ? AND end_time >= ?", nowDateTime, nowDateTime)
+	if err != nil {
+		appG.Response(http.StatusOK, app.SUCCESS, "", err, false)
+		return
+	}
+	appG.Response(http.StatusOK, app.SUCCESS, "", data, false)
 	return
 }

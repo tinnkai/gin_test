@@ -2,11 +2,11 @@ package setting
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
-	"gopkg.in/yaml.v3"
+	"github.com/spf13/viper"
 )
 
 type App struct {
@@ -21,16 +21,14 @@ type App struct {
 	QrCodeSavePath  string   `yaml:"qrCodeSavePath"`
 	FontSavePath    string   `yaml:"fontSavePath"`
 
-	LogSavePath string `yaml:"logSavePath"`
-	LogSaveName string `yaml:"logSaveName"`
-	LogFileExt  string `yaml:"logFileExt"`
-	TimeFormat  string `yaml:"timeFormat"`
-}
-type AppNode struct {
-	App
+	LogSavePath    string `yaml:"logSavePath"`
+	LogSaveName    string `yaml:"logSaveName"`
+	LogFileExt     string `yaml:"logFileExt"`
+	DateFormat     string `yaml:"dateFormat"`
+	DateTimeFormat string `yaml:"dateTimeFormat"`
 }
 
-var AppSetting = &AppNode{}
+var AppSetting = &App{}
 
 type Server struct {
 	RunMode      string        `yaml:"runMode"`
@@ -38,25 +36,34 @@ type Server struct {
 	ReadTimeout  time.Duration `yaml:"readTimeout"`
 	WriteTimeout time.Duration `yaml:"writeTimeout"`
 }
-type ServerNode struct {
-	Server
-}
 
-var ServerSetting = &ServerNode{}
+var ServerSetting = &Server{}
 
 type Database struct {
-	Type        string `yaml:"type"`
-	User        string `yaml:"user"`
-	Password    string `yaml:"password"`
-	Host        string `yaml:"host"`
-	Name        string `yaml:"name"`
-	TablePrefix string `yaml:"tablePrefix"`
-}
-type DatabaseNode struct {
-	Database
+	Type         string `yaml:"type"`
+	User         string `yaml:"user"`
+	Password     string `yaml:"password"`
+	Host         string `yaml:"host"`
+	Name         string `yaml:"name"`
+	MaxIdleConns int    `yaml:"maxIdleConns"`
+	MaxOpenConns int    `yaml:"maxOpenConns"`
+	TablePrefix  string `yaml:"tablePrefix"`
 }
 
-var DatabaseSetting = &DatabaseNode{}
+var DatabaseSetting = &Database{}
+
+type DatabaseActivity struct {
+	Type         string `yaml:"type"`
+	User         string `yaml:"user"`
+	Password     string `yaml:"password"`
+	Host         string `yaml:"host"`
+	Name         string `yaml:"name"`
+	MaxIdleConns int    `yaml:"maxIdleConns"`
+	MaxOpenConns int    `yaml:"maxOpenConns"`
+	TablePrefix  string `yaml:"tablePrefix"`
+}
+
+var DatabaseActivitySetting = &DatabaseActivity{}
 
 type Mongo struct {
 	Type     string `yaml:"type"`
@@ -64,11 +71,8 @@ type Mongo struct {
 	Password string `yaml:"password"`
 	Host     string `yaml:"host"`
 }
-type MongoNode struct {
-	Mongo
-}
 
-var MongoSetting = &MongoNode{}
+var MongoSetting = &Mongo{}
 
 type Redis struct {
 	Host        string        `yaml:"host"`
@@ -77,11 +81,8 @@ type Redis struct {
 	MaxActive   int           `yaml:"maxActive"`
 	IdleTimeout time.Duration `yaml:"idleTimeout"`
 }
-type RedisNode struct {
-	Redis
-}
 
-var RedisSetting = &RedisNode{}
+var RedisSetting = &Redis{}
 
 type Session struct {
 	SessionOn             string `yaml:"sessionOn"`
@@ -94,45 +95,59 @@ type Session struct {
 	PoolSize              int    `yaml:"poolSize"`
 	Db                    string `yaml:"db"`
 }
-type SessionNode struct {
-	Session
-}
 
 var SessionSetting = &Session{}
 
 type Log struct {
 	Skip int `yaml:"skip"`
 }
-type LogNode struct {
-	Log
-}
 
-var LogSetting = &LogNode{}
+var LogSetting = &Log{}
 
 type Rediskey struct {
 	AuthUserKey string `yaml:"authUserKey"`
 }
-type RediskeyNode struct {
-	Rediskey
-}
 
-var RediskeySetting = &RediskeyNode{}
+var RediskeySetting = &Rediskey{}
 
 // Setup initialize the configuration instance
 func Setup() {
-	yamlFile, err := ioutil.ReadFile("conf/app.yaml")
-	if err != nil {
-		fmt.Println(err.Error())
-		log.Fatalf("Yaml open file error: %v", err)
+	// 针对不同的环境获取配置文件
+	// 当系统中没有设置环境变量默认正式环境 pro
+	configorEnv := os.Getenv("CONFIGOR_ENV")
+	if configorEnv == "" {
+		configorEnv = "pro"
 	}
+	configName := "app_" + configorEnv
+	viper.SetConfigName(configName) // 配置文件的文件名，没有扩展名，如 .yaml, .toml 这样的扩展名
+	viper.SetConfigType("yaml")     // 设置扩展名。在这里设置文件的扩展名。另外，如果配置文件的名称没有扩展名，则需要配置这个选项
+	viper.AddConfigPath("conf/")    // 查找配置文件所在路径
+	err := viper.ReadInConfig()     // 搜索并读取配置文件
+	if err != nil {                 // 处理错误
+		panic(fmt.Errorf("Fatal error open config file: %v", err))
+	}
+	// 设置配置
+	SetConfig()
 
-	mapTo(yamlFile, AppSetting)
-	mapTo(yamlFile, ServerSetting)
-	mapTo(yamlFile, DatabaseSetting)
-	mapTo(yamlFile, MongoSetting)
-	mapTo(yamlFile, RedisSetting)
-	mapTo(yamlFile, SessionSetting)
-	mapTo(yamlFile, LogSetting)
+	// viper.WatchConfig()
+	// viper.OnConfigChange(func(e fsnotify.Event) {
+	// 	fmt.Println("Config file changed:", e.Name)
+	// 	// 设置配置
+	// 	SetConfig()
+	// 	mysql_models.Setup()
+	// })
+}
+
+// 设置配置
+func SetConfig() {
+	mapTo("app", AppSetting)
+	mapTo("server", ServerSetting)
+	mapTo("database", DatabaseSetting)
+	mapTo("databaseactivity", DatabaseActivitySetting)
+	mapTo("mongo", MongoSetting)
+	mapTo("redis", RedisSetting)
+	mapTo("session", SessionSetting)
+	mapTo("log", LogSetting)
 
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
@@ -141,9 +156,9 @@ func Setup() {
 }
 
 // mapTo map
-func mapTo(in []byte, out interface{}) {
-	err := yaml.Unmarshal(in, out)
+func mapTo(key string, out interface{}) {
+	err := viper.UnmarshalKey(key, out)
 	if err != nil {
-		log.Fatalf("setting map to error: %v", err)
+		log.Fatalf("setting unable to decode into struct: %v", err)
 	}
 }

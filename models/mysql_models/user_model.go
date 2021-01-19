@@ -17,23 +17,39 @@ type User struct {
 	CreateTime time.Time `gorm:"column(create_time);type(datetime);null"`
 }
 
+// 实例化
+var UserRepository = newUserRepository()
+
+func newUserRepository() *userRepository {
+	return &userRepository{}
+}
+
+// 生日礼包获取数据结构体
+type userRepository struct {
+}
+
+func (t *User) TableName() string {
+	return "gin_user"
+}
+
 // 根据手机号码查询用户信息
-func (u *User) GetUserInfoByPhone(field string) error {
-	err := db.Select(field).Where("phone = ? AND status = ?", u.Phone, "ENABELD").First(u).Error
+func (u *userRepository) GetUserInfoByPhone(phone int64, field string) (User, error) {
+	user := User{}
+	err := db.Select(field).Where("phone = ? AND status = ?", phone, "ENABELD").First(&user).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return err
+		return user, err
 	}
 
-	return nil
+	return user, nil
 }
 
 // Get User Info By Id
-func (u *User) GetUserInfoById(field string) error {
-	var user User
-	err := db.Select(field).Where("id = ? AND status = ?", u.Id, "ENABELD").First(&user).Error
+func (u *userRepository) GetUserInfoById(id int64, field string) (User, error) {
+	user := User{}
+	err := db.Select(field).Where("id = ? AND status = ?", id, "ENABELD").First(&user).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return err
+		return user, err
 	}
 
-	return nil
+	return user, nil
 }

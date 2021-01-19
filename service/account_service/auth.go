@@ -7,9 +7,8 @@ import (
 )
 
 // 验证登录
-func CheckLogin(phone int64, password string) (*mysql_models.User, error) {
-	user := &mysql_models.User{Phone: phone}
-	err := user.GetUserInfoByPhone("id,username,password,phone,`group`")
+func CheckLogin(phone int64, password string) (mysql_models.User, error) {
+	user, err := mysql_models.UserRepository.GetUserInfoByPhone(phone, "id,username,password,phone,`group`")
 	if err != nil {
 		return user, err
 	}

@@ -34,6 +34,7 @@ func Setup() {
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+		fmt.Println(setting.DatabaseSetting.TablePrefix)
 		return setting.DatabaseSetting.TablePrefix + defaultTableName
 	}
 
@@ -41,8 +42,8 @@ func Setup() {
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(100)
+	db.DB().SetMaxIdleConns(setting.DatabaseActivitySetting.MaxIdleConns)
+	db.DB().SetMaxOpenConns(setting.DatabaseActivitySetting.MaxOpenConns)
 }
 
 // CloseDB closes database connection (unnecessary)
