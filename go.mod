@@ -27,6 +27,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/segmentio/ksuid v1.0.3
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.4.0
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14

@@ -1,4 +1,4 @@
-package mysql_models
+package mysql_activity_models
 
 import (
 	"fmt"
@@ -23,25 +23,24 @@ type Model struct {
 // mysql Setup initializes the database instance
 func Setup() {
 	var err error
-	db, err = gorm.Open(setting.DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		setting.DatabaseSetting.User,
-		setting.DatabaseSetting.Password,
-		setting.DatabaseSetting.Host,
-		setting.DatabaseSetting.Name))
+	db, err = gorm.Open(setting.DatabaseActivitySetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		setting.DatabaseActivitySetting.User,
+		setting.DatabaseActivitySetting.Password,
+		setting.DatabaseActivitySetting.Host,
+		setting.DatabaseActivitySetting.Name))
 
 	if err != nil {
-		log.Fatalf("models.Setup err: %v", err)
+		log.Fatalf("mysql activity models err: %v", err)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		fmt.Println(setting.DatabaseSetting.TablePrefix)
-		return setting.DatabaseSetting.TablePrefix + defaultTableName
+		return defaultTableName
 	}
 
 	db.SingularTable(true)
-	// db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
-	// db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	// db.Callback().Delete().Replace("gorm:delete", deleteCallback)
+	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
 	db.DB().SetMaxIdleConns(setting.DatabaseActivitySetting.MaxIdleConns)
 	db.DB().SetMaxOpenConns(setting.DatabaseActivitySetting.MaxOpenConns)
 }

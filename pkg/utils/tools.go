@@ -3,9 +3,28 @@ package utils
 import (
 	"fmt"
 	"gin_test/pkg/setting"
+	"os"
 	"strconv"
 	"time"
+
+	"github.com/segmentio/ksuid"
 )
+
+// 获取配置环境变量
+func GetConfigorEnv() string {
+	configorEnv := os.Getenv("CONFIGOR_ENV")
+	if configorEnv == "" {
+		configorEnv = "pro"
+	}
+
+	return configorEnv
+}
+
+// 获取分布式id(雪花算法)
+func GetUuid() string {
+	id := ksuid.New()
+	return id.String()
+}
 
 // 获取当前时间
 func NowDateTime() string {

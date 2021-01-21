@@ -126,16 +126,8 @@ func Setup() {
 	if err != nil {                 // 处理错误
 		panic(fmt.Errorf("Fatal error open config file: %v", err))
 	}
-	// 设置配置
+	// 设置
 	SetConfig()
-
-	// viper.WatchConfig()
-	// viper.OnConfigChange(func(e fsnotify.Event) {
-	// 	fmt.Println("Config file changed:", e.Name)
-	// 	// 设置配置
-	// 	SetConfig()
-	// 	mysql_models.Setup()
-	// })
 }
 
 // 设置配置

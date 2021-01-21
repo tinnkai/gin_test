@@ -62,7 +62,7 @@ func (this *OrderController) Checkout(c *gin.Context) {
 	checkOutData, err := normalOrder.CheckOut(userInfo)
 	if err != nil {
 		errInfo := errors.GetErrorContext(err)
-		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, errInfo.Field, false)
+		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, errInfo.Field, true)
 		return
 	}
 

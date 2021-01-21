@@ -31,7 +31,11 @@ func (g *Gin) Response(httpCode, errCode int, errMsg string, data interface{}, i
 
 	// 是否记录错误日志
 	if isWriteLog {
-		logging.LogError(responseData)
+		// 获取请求唯一id
+		requestUniqueId, _ := g.C.Get("request_unique_id")
+		logging.LogErrorWithFields(responseData, logging.Fields{
+			"reqUniqueId": requestUniqueId,
+		})
 	}
 
 	return

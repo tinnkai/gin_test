@@ -35,6 +35,7 @@ func init() {
 }
 
 func main() {
+
 	// 设置运行模式
 	gin.SetMode(setting.ServerSetting.RunMode)
 	// 设置读取超时时间
