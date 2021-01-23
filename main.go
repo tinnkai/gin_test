@@ -35,7 +35,6 @@ func init() {
 }
 
 func main() {
-
 	// 设置运行模式
 	gin.SetMode(setting.ServerSetting.RunMode)
 	// 设置读取超时时间
@@ -55,11 +54,20 @@ func main() {
 		pprof.Register(router)
 	}
 
+	// 监听配置文件变化
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		//fmt.Println("Config file changed:", e.Name)
-		// 设置配置
+		// 延迟处理的函数
+		defer func() {
+			// 发生宕机时，获取panic传递的上下文并打印
+			err := recover()
+			if err != nil {
+				logging.LogErrorWithFields(err, logging.Fields{})
+			}
+		}()
+		// 初始化配置
 		setting.SetConfig()
+		// 初始化mysql配置
 		mysql_models.Setup()
 	})
 

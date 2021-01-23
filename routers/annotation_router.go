@@ -16,5 +16,4 @@ func AnnotationRouter(router *gin.Engine) {
 	}), ginrpc.WithDebug(true))
 
 	annotation.Register(router, new(controllers.HongdongController))
-
 }

@@ -54,6 +54,24 @@ func (this *HongdongController) Detail(c *gin.Context) {
 	return
 }
 
+// @Summary 活动详情
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /hongdong/getDetail [get]
+func (this *HongdongController) GetDetail(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var req ReqTest
+
+	err := c.ShouldBind(&req)
+	if err != nil {
+		appG.Response(http.StatusBadRequest, app.INVALID_PARAMS, err.Error(), nil, false)
+		return
+	}
+	appG.Response(http.StatusOK, app.SUCCESS, "", req, false)
+	return
+}
+
 // @Summary 生日礼包活动信息
 // @Produce  json
 // @Success 200 {object} app.Response

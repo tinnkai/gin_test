@@ -5,14 +5,13 @@ import (
 
 	"gin_test/pkg/app"
 	"gin_test/pkg/errors"
-	"gin_test/pkg/setting"
 	"gin_test/pkg/utils"
 )
 
 // @Summary Get Auth User Info
 func GetAuthUserInfo(c *gin.Context) (utils.AuthUser, error) {
 	// redis key
-	authUserKey := setting.RediskeySetting.AuthUserKey
+	authUserKey := "AuthUserInfo"
 	// 初始化用户信息
 	userInfo := utils.AuthUser{}
 	v, exist := c.Get(authUserKey)

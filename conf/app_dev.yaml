@@ -34,8 +34,8 @@ database:
   host: 127.0.0.1:3306
   name: ginapi
   maxIdleConns: 50
-  maxOpenConns: 1000
-  tablePrefix: gin_
+  maxOpenConns: 50
+  tablePrefix: 
 
 databaseactivity:
   type: mysql
@@ -56,9 +56,10 @@ mongo:
 redis:
   password: 
   host: 127.0.0.1:6379
-  maxIdle: 30
-  maxActive: 30
-  idleTimeout: 200s
+  db: 5
+  maxIdle: 50
+  maxActive: 1000
+  idleTimeout: 10s
 
 session:
   #是否开启session
@@ -83,6 +84,14 @@ log:
   #错误路劲层级
   skip : 2
 
-rediskey:
-  #AuthUserKey
-  authUserKey : AuthUserInfo
+#IP
+ip:
+  #白名单列表
+  whiteList : 
+    - 192.168.121.138
+    - 192.168.121.139
+    - 192.168.121.140
+    #黑名单列表
+  blackList : 
+    - 192.168.121.150
+    - 192.168.121.160

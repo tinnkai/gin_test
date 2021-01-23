@@ -12,6 +12,7 @@ import (
 
 // 获取配置环境变量
 func GetConfigorEnv() string {
+	// 在当前系统中设置 CONFIGOR_ENV 环境变量(dev/test/pro) 不设置默认 pro
 	configorEnv := os.Getenv("CONFIGOR_ENV")
 	if configorEnv == "" {
 		configorEnv = "pro"
@@ -20,7 +21,7 @@ func GetConfigorEnv() string {
 	return configorEnv
 }
 
-// 获取分布式id(雪花算法)
+// 获取分布式id
 func GetUuid() string {
 	id := ksuid.New()
 	return id.String()

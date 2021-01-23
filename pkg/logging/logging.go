@@ -67,13 +67,13 @@ func setErrorRotatelogs() *rotatelogs.RotateLogs {
 		panic("Log directory creation failed")
 	}
 	writer, _ := rotatelogs.New(
-		path+"error_log_%Y%m%d%H.log",
+		path+"error_log_%Y%m%d.log",
 		//rotatelogs.WithLinkName(path), // 生成软链，指向最新日志文件
 		// 文件最大保存时间（-1相当于禁用）
-		//rotatelogs.WithMaxAge(-1),
+		rotatelogs.WithMaxAge(-1),
 		// 最大保存个数
 		rotatelogs.WithRotationCount(5),
-		rotatelogs.WithRotationTime(time.Hour), // 日志切割时间间隔
+		rotatelogs.WithRotationTime(24*time.Hour), // 日志切割时间间隔
 	)
 
 	return writer

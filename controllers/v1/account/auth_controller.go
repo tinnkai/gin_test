@@ -25,18 +25,8 @@ type Auth struct {
 func (c *Auth) GetAuth(ctx *gin.Context) {
 	appG := app.Gin{C: ctx}
 
-	//phone, err := strconv.ParseInt(c.Query("phone"), 10, 64)
-	//password := c.Query("password")
-
-	// 绑定参数
+	// 绑定验证参数
 	vAuth := new(validates.Auth)
-	err := ctx.Bind(vAuth)
-	if err != nil {
-		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
-		return
-	}
-
-	// 验证参数
 	vError := vAuth.Bind(ctx)
 	if vError != nil {
 		errString := strings.Join(vError, ",")

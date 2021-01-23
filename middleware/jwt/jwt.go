@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"gin_test/pkg/app"
-	"gin_test/pkg/setting"
 	"gin_test/pkg/utils"
 	"net/http"
 
@@ -45,7 +44,7 @@ func JWT() gin.HandlerFunc {
 				msg = err.(*jwt.ValidationError).Error()
 			} else {
 				// 将用户验证信息存储在上下文中
-				c.Set(setting.RediskeySetting.AuthUserKey, *user)
+				c.Set("AuthUserInfo", *user)
 			}
 		}
 

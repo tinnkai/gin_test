@@ -2,7 +2,6 @@ package setting
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -77,6 +76,7 @@ var MongoSetting = &Mongo{}
 type Redis struct {
 	Host        string        `yaml:"host"`
 	Password    string        `yaml:"password"`
+	Db          int           `yaml:"db"`
 	MaxIdle     int           `yaml:"maxIdle"`
 	MaxActive   int           `yaml:"maxActive"`
 	IdleTimeout time.Duration `yaml:"idleTimeout"`
@@ -104,16 +104,18 @@ type Log struct {
 
 var LogSetting = &Log{}
 
-type Rediskey struct {
-	AuthUserKey string `yaml:"authUserKey"`
+// ip 相关
+type Ip struct {
+	WhiteList []string `yaml:"whiteList"`
+	BlackList []string `yaml:"blackList"`
 }
 
-var RediskeySetting = &Rediskey{}
+var IpSetting = &Ip{}
 
 // Setup initialize the configuration instance
 func Setup() {
 	// 针对不同的环境获取配置文件
-	// 当系统中没有设置环境变量默认正式环境 pro
+	// 获取 CONFIGOR_ENV 环境变量(dev/test/pro) 不设置默认 pro
 	configorEnv := os.Getenv("CONFIGOR_ENV")
 	if configorEnv == "" {
 		configorEnv = "pro"
@@ -140,6 +142,7 @@ func SetConfig() {
 	mapTo("redis", RedisSetting)
 	mapTo("session", SessionSetting)
 	mapTo("log", LogSetting)
+	mapTo("ip", IpSetting)
 
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
@@ -147,10 +150,10 @@ func SetConfig() {
 	RedisSetting.IdleTimeout = RedisSetting.IdleTimeout * time.Second
 }
 
-// mapTo map
+// 转换到指定结构体
 func mapTo(key string, out interface{}) {
 	err := viper.UnmarshalKey(key, out)
 	if err != nil {
-		log.Fatalf("setting unable to decode into struct: %v", err)
+		panic(fmt.Errorf("setting unable to decode into struct: %v", err))
 	}
 }

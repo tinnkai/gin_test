@@ -39,6 +39,7 @@ var MsgFlags = map[int]string{
 	ERROR_ORDER_GOODS_STOCKS:        "商品库存不足",
 	ERROR_ORDER_GOODS_LIMIT:         "商品超过限购",
 	ERROR_ORDER_GOODS_PARAMS_FAIL:   "商品参数错误",
+	ERROR_IP_CHECK_FAIL:             "非法访问(ip 不再白名单中)",
 }
 
 // GetMsg get error information based on Code
