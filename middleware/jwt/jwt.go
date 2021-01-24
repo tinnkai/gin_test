@@ -16,14 +16,14 @@ type jwtParams struct {
 
 // JWT is jwt middleware
 func JWT() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		var data interface{}
 
 		code := app.SUCCESS
 		msg := ""
 		// 绑定接收jwt参数
 		jwtParams := jwtParams{}
-		err := c.ShouldBind(&jwtParams)
+		err := ctx.ShouldBind(&jwtParams)
 		// 未接收到或者接收错误报参数错误
 		if err != nil {
 			code = app.ERROR_AUTH_EMPTY
@@ -32,8 +32,8 @@ func JWT() gin.HandlerFunc {
 			user, err := utils.ParseToken(jwtParams.Token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
-				case jwt.ValidationErrorEmpty:
-					code = app.ERROR_AUTH_EMPTY
+				// case jwt.ValidationErrorEmpty:
+				// 	code = app.ERROR_AUTH_EMPTY
 				case jwt.ValidationErrorExpired:
 					code = app.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
 				default:
@@ -44,18 +44,18 @@ func JWT() gin.HandlerFunc {
 				msg = err.(*jwt.ValidationError).Error()
 			} else {
 				// 将用户验证信息存储在上下文中
-				c.Set("AuthUserInfo", *user)
+				ctx.Set("AuthUserInfo", *user)
 			}
 		}
 
 		if code != app.SUCCESS {
-			appG := app.Gin{C: c}
+			appG := app.Gin{Ctx: ctx}
 			appG.Response(http.StatusOK, code, msg, data, false)
 
-			c.Abort()
+			ctx.Abort()
 			return
 		}
 
-		c.Next()
+		ctx.Next()
 	}
 }

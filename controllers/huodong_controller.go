@@ -23,11 +23,11 @@ type HongdongController struct {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /hongdong/list [get]
-func (this *HongdongController) List(c *gin.Context) {
-	appG := app.Gin{C: c}
+func (this *HongdongController) List(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
 	var req ReqTest
 
-	err := c.ShouldBind(&req)
+	err := ctx.ShouldBind(&req)
 	if err != nil {
 		appG.Response(http.StatusBadRequest, app.INVALID_PARAMS, err.Error(), nil, false)
 		return
@@ -41,11 +41,11 @@ func (this *HongdongController) List(c *gin.Context) {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /hongdong/detail [get]
-func (this *HongdongController) Detail(c *gin.Context) {
-	appG := app.Gin{C: c}
+func (this *HongdongController) Detail(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
 	var req ReqTest
 
-	err := c.ShouldBind(&req)
+	err := ctx.ShouldBind(&req)
 	if err != nil {
 		appG.Response(http.StatusBadRequest, app.INVALID_PARAMS, err.Error(), nil, false)
 		return
@@ -59,11 +59,11 @@ func (this *HongdongController) Detail(c *gin.Context) {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /hongdong/getDetail [get]
-func (this *HongdongController) GetDetail(c *gin.Context) {
-	appG := app.Gin{C: c}
+func (this *HongdongController) GetDetail(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
 	var req ReqTest
 
-	err := c.ShouldBind(&req)
+	err := ctx.ShouldBind(&req)
 	if err != nil {
 		appG.Response(http.StatusBadRequest, app.INVALID_PARAMS, err.Error(), nil, false)
 		return
@@ -77,8 +77,8 @@ func (this *HongdongController) GetDetail(c *gin.Context) {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /hongdong/birthdayPackageInfo [get]
-func (this *HongdongController) BirthdayPackageInfo(c *gin.Context) {
-	appG := app.Gin{C: c}
+func (this *HongdongController) BirthdayPackageInfo(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
 	//data, err := mysql_activity_models.BirthdayPackageRepository.GetInfoByTime()
 	nowDateTime := utils.NowDateTime()
 	data, err := mysql_activity_models.BirthdayPackageRepository.GetOneByWhere("start_time <= ? AND end_time >= ?", nowDateTime, nowDateTime)

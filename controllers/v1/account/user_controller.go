@@ -11,7 +11,7 @@ type User struct {
 }
 
 func (c *User) GetUserInfo(ctx *gin.Context) {
-	appG := app.Gin{C: ctx}
+	appG := app.Gin{Ctx: ctx}
 
 	name := ctx.Query("name")
 	age := ctx.Query("age")
@@ -27,7 +27,7 @@ func (c *User) GetUserInfo(ctx *gin.Context) {
 }
 
 func (c *User) GetUserInfoName(ctx *gin.Context) {
-	appG := app.Gin{C: ctx}
+	appG := app.Gin{Ctx: ctx}
 
 	name := ctx.Query("name")
 	age := ctx.Query("age")

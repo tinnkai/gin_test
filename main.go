@@ -7,7 +7,6 @@ import (
 	"gin_test/pkg/gredis"
 	"gin_test/pkg/logging"
 	"gin_test/pkg/setting"
-	"gin_test/pkg/utils"
 	"gin_test/routers"
 	"net/http"
 
@@ -30,11 +29,10 @@ func init() {
 	gredis.Setup()
 	// mongodb model
 	//mongodbmodels.Setup()
-	// 安装初始化相关变量
-	utils.Setup()
 }
 
 func main() {
+
 	// 设置运行模式
 	gin.SetMode(setting.ServerSetting.RunMode)
 	// 设置读取超时时间

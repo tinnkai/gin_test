@@ -2,8 +2,9 @@ package routers
 
 import (
 	_ "gin_test/docs"
-	"gin_test/middleware/middleip"
-	"gin_test/middleware/middlelogger"
+	middleip "gin_test/middleware/ip"
+	middlelogger "gin_test/middleware/logger"
+	middlerecover "gin_test/middleware/recover"
 	"gin_test/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ import (
 // 初始化路由
 func InitRouter(router *gin.Engine) {
 	// 独立中间件相关处理
-	middle(router)
+	middleHandle(router)
 
 	// 获取环境变量
 	configorEnv := utils.GetConfigorEnv()
@@ -38,7 +39,9 @@ func InitRouter(router *gin.Engine) {
 }
 
 // 中间件相关处理
-func middle(router *gin.Engine) {
+func middleHandle(router *gin.Engine) {
+	// 恐慌性错误恢复中间件：一般由 panic 引起
+	router.Use(middlerecover.ErrorRecover())
 
 	// 日志中间件
 	router.Use(middlelogger.Log())

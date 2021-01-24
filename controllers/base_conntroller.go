@@ -9,12 +9,12 @@ import (
 )
 
 // @Summary Get Auth User Info
-func GetAuthUserInfo(c *gin.Context) (utils.AuthUser, error) {
+func GetAuthUserInfo(ctx *gin.Context) (utils.AuthUser, error) {
 	// redis key
 	authUserKey := "AuthUserInfo"
 	// 初始化用户信息
 	userInfo := utils.AuthUser{}
-	v, exist := c.Get(authUserKey)
+	v, exist := ctx.Get(authUserKey)
 	if !exist {
 		return userInfo, errors.Newf(app.ERROR_AUTH, authUserKey+" not exist", "")
 	}

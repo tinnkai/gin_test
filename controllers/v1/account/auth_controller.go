@@ -23,7 +23,7 @@ type Auth struct {
 // @Failure 500 {object} app.Response
 // @Router /auth [post]
 func (c *Auth) GetAuth(ctx *gin.Context) {
-	appG := app.Gin{C: ctx}
+	appG := app.Gin{Ctx: ctx}
 
 	// 绑定验证参数
 	vAuth := new(validates.Auth)

@@ -3,12 +3,17 @@ package utils
 import (
 	"fmt"
 	"gin_test/pkg/app"
+	"gin_test/pkg/setting"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 var jwtSecret []byte
+
+func init() {
+	jwtSecret = []byte(setting.AppSetting.JwtSecret)
+}
 
 type AuthUser struct {
 	Id       int64  `json:"id"`
@@ -43,7 +48,7 @@ func GenerateToken(u *AuthUser) (string, error) {
 func ParseToken(token string) (*AuthUser, error) {
 	claims := Claims{}
 	if token == "" {
-		return claims.AuthUser, jwt.NewValidationError(app.GetMsg(app.ERROR_AUTH_EMPTY), jwt.ValidationErrorEmpty)
+		return claims.AuthUser, jwt.NewValidationError(app.GetMsg(app.ERROR_AUTH_EMPTY), jwt.ValidationErrorClaimsInvalid)
 	}
 	_, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

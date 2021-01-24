@@ -16,9 +16,9 @@ import (
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /upload/selectFile [get]
-func SelectFile(c *gin.Context) {
-	appG := app.Gin{C: c}
-	appG.C.HTML(http.StatusOK, "upload.html", gin.H{
+func SelectFile(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
+	appG.Ctx.HTML(http.StatusOK, "upload.html", gin.H{
 		"title": "Main website",
 	})
 }
@@ -29,17 +29,17 @@ func SelectFile(c *gin.Context) {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /api/v1/tags/import [post]
-func UploadImage(c *gin.Context) {
-	appG := app.Gin{C: c}
-	file, image, err := c.Request.FormFile("image")
+func UploadImage(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
+	file, image, err := ctx.Request.FormFile("image")
 	if err != nil {
 		logging.LogWarning(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR, "", nil, false)
+		appG.Response(http.StatusInternalServerError, app.ERROR, "", nil, false)
 		return
 	}
 
 	if image == nil {
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, "", nil, false)
+		appG.Response(http.StatusBadRequest, app.INVALID_PARAMS, "", nil, false)
 		return
 	}
 
@@ -49,24 +49,24 @@ func UploadImage(c *gin.Context) {
 	src := fullPath + imageName
 
 	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
-		appG.Response(http.StatusBadRequest, e.ERROR_UPLOAD_CHECK_IMAGE_FORMAT, "", nil, false)
+		appG.Response(http.StatusBadRequest, app.ERROR_UPLOAD_CHECK_IMAGE_FORMAT, "", nil, false)
 		return
 	}
 
 	err = upload.CheckImage(fullPath)
 	if err != nil {
 		logging.LogWarning(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_CHECK_IMAGE_FAIL, "", nil, false)
+		appG.Response(http.StatusInternalServerError, app.ERROR_UPLOAD_CHECK_IMAGE_FAIL, "", nil, false)
 		return
 	}
 
-	if err := c.SaveUploadedFile(image, src); err != nil {
+	if err := ctx.SaveUploadedFile(image, src); err != nil {
 		logging.LogWarning(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_SAVE_IMAGE_FAIL, "", nil, false)
+		appG.Response(http.StatusInternalServerError, app.ERROR_UPLOAD_SAVE_IMAGE_FAIL, "", nil, false)
 		return
 	}
 
-	appG.Response(http.StatusOK, e.SUCCESS, "", map[string]string{
+	appG.Response(http.StatusOK, app.SUCCESS, "", map[string]string{
 		"image_url":      upload.GetImageFullUrl(imageName),
 		"image_save_url": savePath + imageName,
 	}, false)

@@ -2,6 +2,7 @@ package order
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"gin_test/controllers"
@@ -22,11 +23,14 @@ type OrderController struct {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /order/v1/checkout [post]
-func (this *OrderController) Checkout(c *gin.Context) {
-	appG := app.Gin{C: c}
-
+func (this *OrderController) Checkout(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
+	aa := []int{
+		1, 2, 3,
+	}
+	fmt.Println(aa[4])
 	// 获取登录信息
-	authUserInfo, err := controllers.GetAuthUserInfo(c)
+	authUserInfo, err := controllers.GetAuthUserInfo(ctx)
 	if err != nil {
 		errInfo := errors.GetErrorContext(err)
 		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, "", false)
@@ -42,13 +46,13 @@ func (this *OrderController) Checkout(c *gin.Context) {
 
 	// 初始化post信息
 	pastData := new(order_service.NormalPost)
-	err = c.Bind(pastData)
+	err = ctx.Bind(pastData)
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
 	}
 	// 商品参数信息
-	goodsInfo := c.PostForm("goodsInfo")
+	goodsInfo := ctx.PostForm("goodsInfo")
 	err = json.Unmarshal([]byte(goodsInfo), &pastData.GoodsInfo)
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
@@ -75,10 +79,10 @@ func (this *OrderController) Checkout(c *gin.Context) {
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
 // @Router /order/v1/saveorder [post]
-func (this *OrderController) SaveOrder(c *gin.Context) {
-	appG := app.Gin{C: c}
+func (this *OrderController) SaveOrder(ctx *gin.Context) {
+	appG := app.Gin{Ctx: ctx}
 	// 获取登录用户信息
-	authUserInfo, err := controllers.GetAuthUserInfo(c)
+	authUserInfo, err := controllers.GetAuthUserInfo(ctx)
 	if err != nil {
 		errInfo := errors.GetErrorContext(err)
 		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, "", false)
@@ -87,13 +91,13 @@ func (this *OrderController) SaveOrder(c *gin.Context) {
 
 	// 初始化post信息
 	pastData := new(order_service.NormalPost)
-	err = c.Bind(pastData)
+	err = ctx.Bind(pastData)
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
 	}
 	// 商品信息
-	goodsInfo := c.PostForm("goodsInfo")
+	goodsInfo := ctx.PostForm("goodsInfo")
 	err = json.Unmarshal([]byte(goodsInfo), &pastData.GoodsInfo)
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
