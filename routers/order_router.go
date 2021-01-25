@@ -3,7 +3,7 @@ package routers
 import (
 	v1_order "gin_test/controllers/v1/order"
 	v2_order "gin_test/controllers/v2/order"
-	"gin_test/middleware/jwt"
+	"gin_test/middleware/local_auth"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ import (
 func OrderRouter(router *gin.Engine) {
 	// Order group: v1
 	v1 := router.Group("/order/v1")
-	v1.Use(jwt.JWT())
+	v1.Use(local_auth.CheckLogin())
 	{
 		var userOrder v1_order.UserOrderController
 		v1.POST("/list", userOrder.List)
@@ -25,6 +25,7 @@ func OrderRouter(router *gin.Engine) {
 
 	// Order group: v2
 	v2 := router.Group("/order/v2")
+	v2.Use(local_auth.CheckLogin())
 	{
 		var userOrder v2_order.UserOrderController
 		v2.POST("/list", userOrder.List)

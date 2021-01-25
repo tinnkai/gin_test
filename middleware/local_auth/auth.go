@@ -1,7 +1,6 @@
-package jwt
+package local_auth
 
 import (
-	"encoding/json"
 	"fmt"
 	"gin_test/pkg/app"
 	"gin_test/service/account_service"
@@ -24,6 +23,7 @@ func CheckLogin() gin.HandlerFunc {
 		// 绑定接收登录参数
 		localLoginParams := localLoginParams{}
 		err := ctx.ShouldBind(&localLoginParams)
+
 		// 未接收到或者接收错误报参数错误
 		if err != nil {
 			errCode = app.ERROR_AUTH_EMPTY
@@ -31,14 +31,16 @@ func CheckLogin() gin.HandlerFunc {
 			// 校验用户id
 			userInfo, err := account_service.CheckLogin(localLoginParams.UserId)
 			if err != nil {
-
+				errCode = app.ERROR_AUTH
+				errMsg = fmt.Sprintf("登录失败: %v", err)
 			} else {
 				// 将用户验证信息存储在上下文中
-				value, err := json.Marshal(userInfo)
-				if err != nil {
-					errMsg = fmt.Sprintf("登录失败: %v", err)
-				}
-				ctx.Set("UserInfo", value)
+				// value, err := json.Marshal(userInfo)
+				// if err != nil {
+				// 	errCode = app.ERROR_AUTH
+				// 	errMsg = fmt.Sprintf("登录失败: %v", err)
+				// }
+				ctx.Set("UserInfo", userInfo)
 			}
 		}
 

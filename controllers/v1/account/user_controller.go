@@ -1,7 +1,10 @@
 package account
 
 import (
+	"fmt"
+	"gin_test/controllers"
 	"gin_test/pkg/app"
+	"gin_test/service/account_service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,23 +13,20 @@ import (
 type User struct {
 }
 
-func (c *User) GetUserInfo(ctx *gin.Context) {
+func (this *User) GetUserInfo(ctx *gin.Context) {
 	appG := app.Gin{Ctx: ctx}
 
-	name := ctx.Query("name")
-	age := ctx.Query("age")
+	userInfo := controllers.GetAuthUserInfo(ctx)
 
-	userInfo := map[string]string{
-		"name": name,
-		"age":  age,
-	}
+	userInfo, _ = account_service.CheckLogin(3)
+	fmt.Println(userInfo)
 
 	//appG response
 	appG.Response(http.StatusOK, app.SUCCESS, "", userInfo, false)
 	return
 }
 
-func (c *User) GetUserInfoName(ctx *gin.Context) {
+func (this *User) GetUserInfoName(ctx *gin.Context) {
 	appG := app.Gin{Ctx: ctx}
 
 	name := ctx.Query("name")

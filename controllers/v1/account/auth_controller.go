@@ -15,13 +15,13 @@ import (
 type Auth struct {
 }
 
-// @Summary Get Auth
+// @Summary 登录
 // @Produce  json
 // @Param phone query string true "phone"
 // @Param password query string true "password"
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /auth [post]
+// @Router /account/v1/auth [post]
 func (c *Auth) GetAuth(ctx *gin.Context) {
 	appG := app.Gin{Ctx: ctx}
 
@@ -35,7 +35,7 @@ func (c *Auth) GetAuth(ctx *gin.Context) {
 	}
 
 	// 验证登录
-	user, err := account_service.CheckLogin(vAuth.Phone, vAuth.Password)
+	user, err := account_service.CheckLogin(vAuth.Phone)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, app.ERROR_AUTH_CHECK_TOKEN_FAIL, "", nil, false)
 		return
@@ -43,9 +43,8 @@ func (c *Auth) GetAuth(ctx *gin.Context) {
 
 	// 创建token
 	authUser := &utils.AuthUser{
-		Id:       user.Id,
+		Id:       user.UserId,
 		Username: user.Username,
-		Group:    user.Group,
 	}
 	token, err := utils.GenerateToken(authUser)
 	if err != nil {

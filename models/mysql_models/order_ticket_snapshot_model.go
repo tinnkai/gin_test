@@ -8,7 +8,7 @@ type OrderTicketSnapshot struct {
 	Id         int       `gorm:"column(id);auto"`
 	OrderId    uint      `gorm:"column(order_id)"`
 	UserId     int64     `gorm:"column(user_id);null"`
-	RecordId   int       `orgormm:"column(record_id);null"`
+	RecordId   int       `gorm:"column(record_id);null"`
 	Content    string    `gorm:"column(content);type(text);null"`
 	UpdateTime time.Time `gorm:"column(update_time);type(datetime);null"`
 	CreateTime time.Time `gorm:"column(create_time);type(datetime);null"`

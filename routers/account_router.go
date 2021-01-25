@@ -2,7 +2,7 @@ package routers
 
 import (
 	v1_account "gin_test/controllers/v1/account"
-	"gin_test/middleware/jwt"
+	"gin_test/middleware/local_auth"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +17,7 @@ func AccountRouter(router *gin.Engine) {
 	}
 
 	// 登录认证组 V1
-	v1AccountGroupAuth := v1AccountGroup.Use(jwt.JWT())
+	v1AccountGroupAuth := v1AccountGroup.Use(local_auth.CheckLogin())
 	{
 		var user v1_account.User
 		v1AccountGroupAuth.GET("/user-info", user.GetUserInfo)

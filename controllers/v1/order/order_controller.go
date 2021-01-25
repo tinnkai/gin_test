@@ -30,15 +30,14 @@ func (this *OrderController) Checkout(ctx *gin.Context) {
 	}
 	fmt.Println(aa[4])
 	// 获取登录信息
-	authUserInfo, err := controllers.GetAuthUserInfo(ctx)
-	if err != nil {
-		errInfo := errors.GetErrorContext(err)
-		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, "", false)
+	authUserInfo := controllers.GetAuthUserInfo(ctx)
+	if authUserInfo.UserId < 1 {
+		appG.Response(http.StatusOK, app.ERROR_AUTH, "", "", false)
 		return
 	}
 
 	// 获取用户信息
-	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.Id, "id,username,password,phone,`group`")
+	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.UserId, "id,username,password,phone,`group`")
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
@@ -82,16 +81,16 @@ func (this *OrderController) Checkout(ctx *gin.Context) {
 func (this *OrderController) SaveOrder(ctx *gin.Context) {
 	appG := app.Gin{Ctx: ctx}
 	// 获取登录用户信息
-	authUserInfo, err := controllers.GetAuthUserInfo(ctx)
-	if err != nil {
-		errInfo := errors.GetErrorContext(err)
-		appG.Response(http.StatusOK, errInfo.Code, errInfo.Message, "", false)
+	// 获取登录信息
+	authUserInfo := controllers.GetAuthUserInfo(ctx)
+	if authUserInfo.UserId < 1 {
+		appG.Response(http.StatusOK, app.ERROR_AUTH, "", "", false)
 		return
 	}
 
 	// 初始化post信息
 	pastData := new(order_service.NormalPost)
-	err = ctx.Bind(pastData)
+	err := ctx.Bind(pastData)
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return
@@ -105,7 +104,7 @@ func (this *OrderController) SaveOrder(ctx *gin.Context) {
 	}
 
 	// 获取用户信息
-	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.Id, "id,username,password,phone,`group`")
+	userInfo, err := mysql_models.UserRepository.GetUserInfoById(authUserInfo.UserId, "id,username,password,phone,`group`")
 	if err != nil {
 		appG.Response(http.StatusOK, app.ERROR, err.Error(), "", false)
 		return

@@ -10,10 +10,8 @@ import (
 	"gin_test/routers"
 	"net/http"
 
-	"github.com/fsnotify/fsnotify"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
 
 func init() {
@@ -53,21 +51,21 @@ func main() {
 	}
 
 	// 监听配置文件变化
-	viper.WatchConfig()
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		// 延迟处理的函数
-		defer func() {
-			// 发生宕机时，获取panic传递的上下文并打印
-			err := recover()
-			if err != nil {
-				logging.LogErrorWithFields(err, logging.Fields{})
-			}
-		}()
-		// 初始化配置
-		setting.SetConfig()
-		// 初始化mysql配置
-		mysql_models.Setup()
-	})
+	// viper.WatchConfig()
+	// viper.OnConfigChange(func(e fsnotify.Event) {
+	// 	// 延迟处理的函数
+	// 	defer func() {
+	// 		// 发生宕机时，获取panic传递的上下文并打印
+	// 		err := recover()
+	// 		if err != nil {
+	// 			logging.LogErrorWithFields(err, logging.Fields{})
+	// 		}
+	// 	}()
+	// 	// 初始化配置
+	// 	setting.SetConfig()
+	// 	// 初始化mysql配置
+	// 	mysql_models.Setup()
+	// })
 
 	// 初始化路由
 	routers.InitRouter(router)
