@@ -21,6 +21,7 @@ func AccountRouter(router *gin.Engine) {
 	{
 		var user v1_account.User
 		v1AccountGroupAuth.GET("/user-info", user.GetUserInfo)
+		v1AccountGroupAuth.GET("/user", user.GetUser)
 	}
 
 }

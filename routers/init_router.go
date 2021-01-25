@@ -7,6 +7,8 @@ import (
 	middlerecover "gin_test/middleware/recover"
 	"gin_test/pkg/utils"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -40,6 +42,11 @@ func InitRouter(router *gin.Engine) {
 
 // 中间件相关处理
 func middleHandle(router *gin.Engine) {
+
+	// session
+	// 用户加密的secret
+	store, _ := redis.NewStore(10, "tcp", "127.0.0.1:6379", "", []byte("secret_gin"))
+	router.Use(sessions.Sessions("sessionid", store))
 	// 恐慌性错误恢复中间件：一般由 panic 引起
 	router.Use(middlerecover.ErrorRecover())
 

@@ -1,7 +1,9 @@
 package ip
 
 import (
+	"gin_test/pkg/app"
 	"gin_test/pkg/setting"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,11 +25,11 @@ func IpWhiteListCheck() gin.HandlerFunc {
 			}
 		}
 		if flag == false {
-			//appG := app.Gin{Ctx: ctx}
-			//appG.Response(http.StatusOK, app.ERROR_IP_CHECK_FAIL, "", nil, false)
+			appG := app.Gin{Ctx: ctx}
+			appG.Response(http.StatusOK, app.ERROR_IP_CHECK_FAIL, "", nil, false)
 
-			//ctx.Abort()
-			//return
+			ctx.Abort()
+			return
 		}
 
 		ctx.Next()
